@@ -1,0 +1,23 @@
+# Environment
+.env
+
+# Node
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
+.import_linter_cache/
+staticfiles/
+
+# Editors & OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -1,0 +1,36 @@
+[project]
+name = "api"
+version = "0.0.0"
+requires-python = ">=3.13"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+extend-exclude = ["**/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ"]
+
+# --- Clean Architecture, enforced -------------------------------------------
+# `make lint` runs `lint-imports`, which fails the build if a layer imports
+# something it must not. See docs/decisions/0001-clean-architecture-api.md.
+
+[tool.importlinter]
+root_packages = ["config", "presentation", "infrastructure", "application", "domain"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Dependencies point inward"
+type = "layers"
+layers = [
+    "config",
+    "presentation | infrastructure",
+    "application",
+    "domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "Domain and application are framework-free"
+type = "forbidden"
+source_modules = ["domain", "application"]
+forbidden_modules = ["django", "rest_framework", "psycopg"]

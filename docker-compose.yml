@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17-alpine
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 2s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: ./apps/api
+    env_file: .env
+    volumes:
+      - ./apps/api:/app
+    ports:
+      - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      VITE_API_PROXY_TARGET: http://api:8000
+    volumes:
+      - .:/app
+      # Keep the container's own node_modules (Linux binaries) instead of the host's.
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/apps/docs/node_modules
+      - /app/packages/ui/node_modules
+      - /app/packages/tokens/node_modules
+    ports:
+      - '5173:5173'
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
