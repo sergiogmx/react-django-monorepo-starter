@@ -1,4 +1,12 @@
-## ADDED Requirements
+# authentication Specification
+
+## Purpose
+
+Lets people sign up, log in and log out of the web app through Auth0, and
+ensures the API serves protected data only to callers holding a valid Auth0
+access token, each of them backed by a local user profile.
+
+## Requirements
 
 ### Requirement: Log in and sign up through Auth0
 
