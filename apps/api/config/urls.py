@@ -4,10 +4,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from config import container
 from presentation.api.health import HealthView
+from presentation.api.me import MeView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # API documentation (OpenAPI 3 schema + Swagger UI).
+    # API documentation (OpenAPI 3 schema + Swagger UI). Public.
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/docs/",
@@ -19,5 +20,10 @@ urlpatterns = [
         "api/health/",
         HealthView.as_view(check_health=container.check_health()),
         name="health",
+    ),
+    path(
+        "api/me/",
+        MeView.as_view(get_current_user=container.get_current_user()),
+        name="me",
     ),
 ]

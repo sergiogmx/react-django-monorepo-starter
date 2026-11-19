@@ -1,10 +1,13 @@
 /// <reference types="vitest/config" />
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // Read VITE_* variables from the repo-root .env, shared with the API.
+  envDir: fileURLToPath(new URL('../..', import.meta.url)),
   server: {
     port: 5173,
     // The browser only talks to Vite; Vite forwards /api to Django.

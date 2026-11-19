@@ -86,9 +86,23 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Auth0 (see docs/auth0-setup.md). If empty, protected endpoints answer 401
+# and `manage.py check` warns (auth.W001).
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN", "").strip()
+AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE", "").strip()
+AUTH0_EMAIL_CLAIM = os.environ.get(
+    "AUTH0_EMAIL_CLAIM", "https://starter.local/email"
+).strip()
+
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    # Secure by default: every view needs a valid Auth0 token unless it
+    # explicitly opts out (see presentation/api/health.py).
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "infrastructure.auth.drf_authentication.Auth0BearerAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
 # OpenAPI schema at /api/schema/, Swagger UI at /api/docs/.
@@ -97,4 +111,8 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Django REST API built with Clean Architecture.",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    # The docs themselves are public.
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    "SERVE_AUTHENTICATION": [],
+    "SWAGGER_UI_SETTINGS": {"persistAuthorization": True},
 }
