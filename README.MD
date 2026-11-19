@@ -11,7 +11,9 @@ in minutes — not to reconfigure tooling for a day.
 - Django + Django REST Framework API with PostgreSQL, structured
   with Clean Architecture (domain, application, infrastructure,
   presentation)
-- Token-based authentication: sign up, log in, log out, protected routes
+- Authentication with Auth0: sign up, log in, log out and password
+  reset through Universal Login, protected routes in the web app,
+  and JWT validation in the API (secure by default)
 - Working catalog example: full CRUD with invented seed data
 - Docker Compose setup for the web app, API, and database
 - A `Makefile` as the single entry point: `make build`, `make up`,
@@ -26,7 +28,8 @@ in minutes — not to reconfigure tooling for a day.
 
 ## Tech stack
 
-Frontend: React, TypeScript, Vite, Tailwind CSS
+Frontend: React, TypeScript, Vite, Tailwind CSS, React Router
+Auth: Auth0 (`@auth0/auth0-react` on the web, PyJWT on the API)
 Backend: Python, Django, Django REST Framework, drf-spectacular
 (OpenAPI + Swagger UI)
 Database: PostgreSQL
@@ -63,6 +66,14 @@ run the API outside Docker.
    at http://localhost:8000/api/docs/. The web app runs at
    http://localhost:5173; it calls the API's health check and
    shows whether the API and the database are up.
+
+4. Configure Auth0 to enable login: create an API and a
+   Single Page Application in your Auth0 tenant, fill the
+   `AUTH0_*` and `VITE_AUTH0_*` variables in `.env`, and run
+   `make restart`. Step by step in
+   [docs/auth0-setup.md](docs/auth0-setup.md). Until then the
+   app runs, protected endpoints answer 401, and the web app
+   shows a notice instead of the login button.
 
 After that, `make up` and `make down` are all you need day to day.
 
@@ -217,7 +228,6 @@ by default; use `openspec update` to change or refresh them.
 
 ## Roadmap
 
-- [ ] Refresh tokens and password reset
 - [ ] Role-based permissions
 - [ ] Pagination, search, and filters on the catalog
 - [ ] Visual snapshot tests for Ladle stories with Playwright
