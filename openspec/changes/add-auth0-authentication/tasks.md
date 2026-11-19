@@ -80,5 +80,5 @@
 - [x] 7.1 `make test` and `make lint` pass
 - [x] 7.2 Manual check against the real tenant: sign up, log in, reload,
       open `/profile`, log out, open `/profile` again
-- [ ] 7.3 Manual check in Swagger UI: Authorize with a token and call
+- [x] 7.3 Manual check in Swagger UI: Authorize with a token and call
       `/api/me/`
